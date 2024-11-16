@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('/', WelcomeController::class);
+Route::resource('/user_dashboard', UserDashboardController::class);
+Route::post('/signup', [WelcomeController::class, 'signup']);
+Route::get('/logout', [LogoutController::class, 'index']);
