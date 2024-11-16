@@ -22,5 +22,5 @@ exif,gd2,pdo_mysql,file_ext
 ## Running the server
 - Open cmd where your project is located.
 - Type the command `php artisan serve --port 8443` to start the server
-![Server Start](server.png)
+![Server Start](server.PNG)
 - Open a browser, and browse the url ``http://localhost:8443``
