@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .background-header {
             background-color: rgb(16, 112, 255) !important;
@@ -117,43 +118,8 @@
     <section class="section" id="about">
         <div class="container">
             <div class="row">
-                <div class="col-lg-7 col-md-12 col-sm-12"
-                    data-scroll-reveal="enter left move 30px over 0.6s after 0.4s">
-                    <img src="/logo.png" class="rounded img-fluid d-block mx-auto" alt="App">
-                </div>
-                <div class="right-text col-lg-5 col-md-12 col-sm-12 mobile-top-fix">
-                    <div class="left-heading">
-                        <h5>BLOCKFORE: AI-Driven Energy Forecasting Secured by Blockchain</h5>
-                    </div>
-                    <div class="left-text">
-                        <p>Experience the future of energy management with BlockFore, where artificial intelligence
-                            meets blockchain to deliver precise energy demand forecasts. Leverage advanced AI algorithms
-                            for accurate predictions while ensuring unmatched security, transparency, and trust through
-                            blockchain technology. Empower your energy decisions and drive sustainability with
-                            innovation at your fingertips.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="col-lg-12">
-                    <div class="hr"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section rowBlue" id="about">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 fullWidth">
-                    <label for="directory" class="btnWhite">
-                        <h3>Forecast Now</h3>
-                    </label>
-                    <center>
-                        <a style="cursor: pointer;" data-target="#forecastModal" data-toggle="modal"
-                            class="btn btn-warning mt-3 fullWidth">Start
-                            Forecasting</a>
-                    </center>
+                    
                 </div>
             </div>
             <div class="row">
@@ -217,19 +183,15 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <input required class="form-control" type="number" name="temp"
-                                        id="fn" placeholder="Temperature" step="any">
-                                </div>
-                                <div class="form-group">
-                                    <input class="form-control" type="number" name="rainfall" id="rain"
-                                        placeholder="Rainfall" step="any">
+                                        id="fn" placeholder="Temperature">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="humidity" id="mn"
-                                        placeholder="Humidity" step="any">
+                                        placeholder="Humidity">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="windSpeed" id="ln"
-                                        placeholder="Wind Speed" step="any">
+                                        placeholder="Wind Speed">
                                 </div>
                                 <div class="form-group">
                                     <label for="forecastDate">Forecast Date:</label>
