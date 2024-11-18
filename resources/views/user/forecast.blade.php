@@ -123,8 +123,8 @@
                         <div class="card-header">
                             <button class="btn btn-primary" data-target="#forecastModal"
                                 data-toggle="modal">Forecast</button>
-                            <button class="btn btn-success text-white" data-target="#fileForecastModal"
-                                data-toggle="modal">Import File</button>
+                            {{-- <button class="btn btn-success text-white" data-target="#fileForecastModal"
+                                data-toggle="modal">Import File</button> --}}
                         </div>
                         <div class="card-body">
                             <div class="table-responsive mb-5">
