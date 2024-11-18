@@ -138,7 +138,7 @@ class UserForecastController extends Controller
                         'file', // The API's expected file input name
                         file_get_contents($uploadedFile->getRealPath()),
                         $uploadedFile->getClientOriginalName()
-                    )->post('http://localhost:5000/predict', []);
+                    )->post('http://localhost:5000/manual/predict', []);
 
                     // Check API response
                     if ($response->successful()) {
