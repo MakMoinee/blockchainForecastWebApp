@@ -91,7 +91,7 @@
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav" style="color: white !important;">
                             <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="/results">Results</a></li>
+                            <li class="scroll-to-section"><a href="/forecast">Forecasts</a></li>
                             <li><a data-toggle="modal" data-target="#logoutModal"
                                     class="cursorPoint decorationNone">Logout</a></li>
 

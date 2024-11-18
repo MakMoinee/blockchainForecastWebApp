@@ -91,8 +91,8 @@
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav" style="color: white !important;">
-                            <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
-                            <li class="scroll-to-section"><a href="/results">Results</a></li>
+                            <li class="scroll-to-section"><a href="/user_dashboard" class="">Home</a></li>
+                            <li class="scroll-to-section"><a href="/forecast" class="active">Forecasts</a></li>
                             <li><a data-toggle="modal" data-target="#logoutModal"
                                     class="cursorPoint decorationNone">Logout</a></li>
 
@@ -118,8 +118,65 @@
     <section class="section" id="about">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <button class="btn btn-primary" data-target="#forecastModal"
+                                data-toggle="modal">Forecast</button>
+                            <button class="btn btn-success text-white" data-target="#fileForecastModal"
+                                data-toggle="modal">Import File</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive mb-5">
+                                <table class="table border mb-2" id="sortTable">
+                                    <thead class="table-light fw-semibold bg-primary text-white">
+                                        <tr class="align-middle">
+                                            <th class="text-center">
+                                                Forecasted Date
+                                            </th>
+                                            <th>Energy Demand Forecasted</th>
+                                            <th class="text-center">Date Submitted</th>
+                                            <th>Action</th>
+                                            <th class="text-center"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($allForecast as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    {{ (new DateTime($item->forecastedDate))->setTimezone(new DateTimeZone('Asia/Manila'))->format('Y-m-d') }}
+                                                </td>
+                                                <td> {{ number_format($item->energy, 2) }} </td>
+                                                <td class="text-center">
+                                                    {{ (new DateTime($item->created_at))->setTimezone(new DateTimeZone('Asia/Manila'))->format('Y-m-d h:i A') }}
+                                                </td>
+                                                <td>
+                                                    <button class="btn">
+
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="pagination">
+                                            <ul class="pagination">
+                                                @for ($i = 1; $i <= $allForecast->lastPage(); $i++)
+                                                    <li class="page-item ">
+                                                        <a class="page-link {{ $allForecast->currentPage() == $i ? 'active text-danger' : 'text-dark' }}"
+                                                            href="{{ $allForecast->url($i) }}">{{ $i }}</a>
+                                                    </li>
+                                                @endfor
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -183,15 +240,19 @@
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <input required class="form-control" type="number" name="temp"
-                                        id="fn" placeholder="Temperature">
+                                        id="fn" placeholder="Temperature" step="any">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" type="number" name="rainfall" id="rain"
+                                        placeholder="Rainfall" step="any">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="humidity" id="mn"
-                                        placeholder="Humidity">
+                                        placeholder="Humidity" step="any">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="windSpeed" id="ln"
-                                        placeholder="Wind Speed">
+                                        placeholder="Wind Speed" step="any">
                                 </div>
                                 <div class="form-group">
                                     <label for="forecastDate">Forecast Date:</label>
@@ -213,6 +274,45 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade " id="fileForecastModal" tabindex="-1" role="dialog"
+        aria-labelledby="fileForecastModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fileForecastModalLabel">Import File For Forecast</h5>
+                </div>
+                <form action="/forecast" method="POST" autocomplete="off">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <br>
+                                    <input type="file" name="fFile" id="" class="form-control"
+                                        accept=".csv">
+                                </div>
+                                <div class="form-group">
+                                    <h6 style=""><b>Note:</b> This functionality follows a certain
+                                        template. Please Download
+                                        template <a href="/input.csv">here</a></h6>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="btnWithFile" value="yes">Proceed
+                            Forecasting</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade " id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -242,30 +342,30 @@
 
     @include('modals.success')
     @include('modals.error')
-    @if (session()->pull('successLogin'))
+    @if (session()->pull('successForecast'))
         <script>
             setTimeout(() => {
-                document.getElementById('successMsg').innerHTML = "Successfully Login";
+                document.getElementById('successMsg').innerHTML = "Successfully Generate Forecast";
                 document.getElementById('btnSuccessModal').click();
                 setTimeout(() => {
                     document.getElementById('btnCloseSuccessModal').click();
                 }, 1200);
             }, 500);
         </script>
-        {{ session()->forget('successLogin') }}
+        {{ session()->forget('successForecast') }}
     @endif
 
-    @if (session()->pull('errorLogin'))
+    @if (session()->pull('errorForecast'))
         <script>
             setTimeout(() => {
-                document.getElementById('errorMsg').innerHTML = "Wrong Email or Password";
+                document.getElementById('errorMsg').innerHTML = "Failed To Forecast";
                 document.getElementById('btnErrorModal').click();
                 setTimeout(() => {
                     document.getElementById('btnCloseErrorModal').click();
                 }, 1500);
             }, 500);
         </script>
-        {{ session()->forget('errorLogin') }}
+        {{ session()->forget('errorForecast') }}
     @endif
     <script>
         const today = new Date().toISOString().split('T')[0];

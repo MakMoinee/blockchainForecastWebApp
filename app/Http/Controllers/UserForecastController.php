@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Forecasts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class UserForecastController extends Controller
@@ -21,7 +22,12 @@ class UserForecastController extends Controller
                 return redirect("/");
             }
 
-            return view('user.forecast');
+            $allForecast = DB::table('forecasts')
+                ->where('userID', '=', $user['userID'])
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+
+            return view('user.forecast', ['allForecast' => $allForecast]);
         }
         return redirect("/");
     }
@@ -97,7 +103,7 @@ class UserForecastController extends Controller
                         $newForecast = new Forecasts();
                         $newForecast->userID = $user['userID'];
                         $det = date('Y-m-d', $originalDate);
-                        $newForecast->forcastedDate = $det;
+                        $newForecast->forecastedDate = $det;
                         $newForecast->energy = $data;
                         $isSave = $newForecast->save();
                         if ($isSave) {
@@ -117,6 +123,50 @@ class UserForecastController extends Controller
                     if (file_exists($filePath)) {
                         unlink($filePath);
                     }
+                }
+            } else if ($request->btnWithFile) {
+                $request->validate([
+                    'fFile' => 'required|file|mimes:csv,txt|max:3048', // Validate the file type and size
+                ]);
+
+                try {
+                    // Get the uploaded file
+                    $uploadedFile = $request->file('fFile');
+
+                    // Send the uploaded file to the API
+                    $response = Http::attach(
+                        'file', // The API's expected file input name
+                        file_get_contents($uploadedFile->getRealPath()),
+                        $uploadedFile->getClientOriginalName()
+                    )->post('http://localhost:5000/predict', []);
+
+                    // Check API response
+                    if ($response->successful()) {
+                        $data = $response->json();
+                        // Process the response data as needed
+                        // Assuming the response includes energy data and forecast date
+                        $forecastDate = array_key_first($data);
+                        $energy = $data[$forecastDate];
+
+                        $newForecast = new Forecasts();
+                        $newForecast->userID = $user['userID'];
+                        $newForecast->forecastedDate = date('Y-m-d', strtotime($forecastDate));
+                        $newForecast->energy = $energy;
+                        $isSave = $newForecast->save();
+
+                        if ($isSave) {
+                            session()->put("successForecast", true);
+                            return redirect("/forecast");
+                        } else {
+                            session()->put("errorForecast", true);
+                            return redirect("/user_dashboard");
+                        }
+                    } else {
+                        return response()->json(['error' => 'API request failed', 'response' => $response->body()], 500);
+                    }
+                } catch (\Exception $e) {
+                    session()->put("errorForecast", true);
+                    error_log($e);
                 }
             }
 
